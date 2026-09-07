@@ -1,0 +1,573 @@
+# ROLE
+You are an expert Full-Stack Web Developer and Premium UI/UX Designer with deep
+technical experience in PHP 8.x, SQLite, Vanilla JS, and animated SaaS dashboard
+design.
+
+---
+
+# TASK
+Your task is to build a complete, fully-controlled Static File Hosting Platform
+called "Host IF" for single-admin use with extreme accuracy.
+A full hosting control panel where EVERYTHING is manageable from the web interface:
+sites, files, storage, slugs, passwords, settings, and live previews.
+No external tools needed. Everything lives in the browser.
+
+---
+
+# LANGUAGE MODE (STRICT)
+You MUST write ALL code, ALL logic, ALL files ONLY in:
+=> PHP 8.x (no framework) + Vanilla JavaScript (ES6+) + Pure CSS3
+
+You are NOT allowed to use React, Vue, Angular, Laravel, or any JS framework.
+Do NOT use npm, composer, or any package manager.
+Follow EXACTLY what is specified.
+
+---
+
+# TECH STACK (STRICT)
+Use ONLY the following technologies:
+
+[ALLOWED]
+  PHP 8.x          — routing, sessions, file I/O, auth, settings control
+  SQLite via PDO   — zero-config embedded database, no server required
+  Vanilla JS ES6+  — animations, drag and drop, live search, modals, clipboard
+  Google Fonts CDN — Inter for body, Space Grotesk for display headings
+  CSS3 Pure        — custom keyframe animations, glassmorphism, gradients, particles
+
+[FORBIDDEN]
+  Any PHP framework     (Laravel, Slim, Codeigniter, Symfony)
+  Any JS library        (jQuery, Alpine.js, HTMX, Lodash, Axios)
+  Any external database (MySQL, PostgreSQL, MongoDB)
+  Any CSS framework     (Tailwind, Bootstrap, Bulma, Foundation)
+  Any build tool        (Vite, Webpack, Parcel, Rollup)
+  Any icon library      (FontAwesome, Heroicons, Lucide) — use inline SVG only
+
+---
+
+# BRAND IDENTITY
+
+  App Name   : Host IF
+  Tagline    : Your files. Your control. Instantly live.
+  Logo Mark  : Bold "HI" monogram inside an animated glowing rounded square
+  Primary    : Electric Purple  #7c3aed to #a855f7
+  Secondary  : Pure White with 80 to 90 percent opacity layering
+  Style Vibe : Premium dark SaaS — deep purple-black background, white text,
+               glowing purple accents, floating animated particles,
+               glassmorphism cards, subtle shimmer effects
+
+---
+
+# FOLDER STRUCTURE
+Create the following EXACT structure with no extra files and no renaming:
+
+  hostif/
+  |-- index.php       Public animated landing page
+  |-- login.php       Glassmorphism single-password admin login
+  |-- dashboard.php   Main control panel with all sites and global stats
+  |-- upload.php      POST-only file upload processor
+  |-- manage.php      Per-site full file manager with all controls
+  |-- settings.php    Live admin settings panel (password, limits, app name, storage)
+  |-- logout.php      Session destroy and redirect
+  |-- serve.php       MIME-aware raw static file server
+  |-- router.php      PHP built-in dev server router
+  |-- config.php      All constants, loads live values from DB settings table
+  |-- db.php          PDO SQLite connection and full schema initialization
+  |-- functions.php   All helpers: CRUD, auth, slug, format, settings, stats
+  |-- .htaccess       Apache mod_rewrite clean URL rules
+  |-- assets/
+      |-- style.css   Complete design system with all animations
+      |-- app.js      All JS: particles, modals, drag-drop, clipboard, search
+      |-- uploads/    Auto-created at runtime, stores slug/filename structure
+
+---
+
+# DESIGN SYSTEM (STRICT)
+
+[COLOR PALETTE]
+
+  --bg            : #0a0612    Deepest purple-black, page base background
+  --bg2           : #110920    Card and surface background
+  --bg3           : #1a0f2e    Elevated surfaces, navbar, modals
+  --primary       : #7c3aed    Electric purple, buttons, glows, active states
+  --primary-lt    : #a855f7    Light purple, hover states and highlights
+  --primary-dim   : #4c1d95    Dark purple, subtle background fills
+  --white         : #ffffff    Pure white, headings and primary icons
+  --white-80      : rgba(255,255,255,0.80)   Body and label text
+  --white-50      : rgba(255,255,255,0.50)   Muted and secondary text
+  --white-10      : rgba(255,255,255,0.08)   Card borders and dividers
+  --glow          : rgba(124,58,237,0.35)    Box shadow glow base color
+  --grad          : linear-gradient(135deg, #7c3aed, #a855f7)   Brand gradient
+  --grad-shine    : linear-gradient(135deg, #7c3aed, #c084fc, #7c3aed)   Shimmer
+  --green         : #10b981    Success states and confirmations
+  --red           : #ef4444    Danger and delete actions
+  --yellow        : #f59e0b    Warning and notice states
+
+[ANIMATION SYSTEM]
+
+  float-particles
+    Behavior : 25 small white and purple circle particles float upward from bottom
+               of screen and fade out near the top
+    Timing   : Each particle has randomized size (3px to 8px), randomized horizontal
+               position, randomized animation duration (8s to 20s), and randomized
+               delay (0s to 15s) so they never look synchronized
+    CSS      : transform translateY from 100vh to -10vh, opacity 0 to 0.6 to 0,
+               scale 0 to 1.2 over full duration
+
+  glow-pulse
+    Behavior : Applied to logo icon and primary CTA buttons
+    Timing   : 3s infinite ease-in-out
+    CSS      : box-shadow oscillates between 20px and 80px purple glow radius
+
+  shimmer-sweep
+    Behavior : Diagonal light sweep across glass cards on hover
+    Timing   : 0.6s ease triggered on mouseenter
+    CSS      : background-position animates from -200% to 200% on gradient overlay
+
+  fade-up
+    Behavior : Page sections and cards fade in and slide up 20px on load
+    Timing   : 0.5s ease-out with staggered delays per element (0.1s increments)
+    CSS      : opacity 0 to 1, translateY 20px to 0
+
+  spin-border
+    Behavior : Conic gradient border slowly rotates around the logo monogram
+    Timing   : 4s linear infinite
+    CSS      : conic-gradient rotates via CSS custom property animation
+
+  typing-cursor
+    Behavior : Blinking purple cursor at end of hero tagline text
+    Timing   : 0.8s step-end infinite
+    CSS      : border-right toggles between #a855f7 and transparent
+
+  count-up
+    Behavior : Stat numbers animate from 0 to their real value when scrolled into view
+    Trigger  : IntersectionObserver in app.js
+    Duration : 1.5s with easeOutCubic curve
+
+[GLASSMORPHISM CARD STYLE]
+
+  background     : rgba(124, 58, 237, 0.06)
+  border         : 1px solid rgba(255, 255, 255, 0.08)
+  border-radius  : 20px
+  backdrop-filter: blur(24px)
+  box-shadow     : 0 0 0 1px rgba(124,58,237,0.12),
+                   0 20px 60px rgba(0,0,0,0.5),
+                   inset 0 1px 0 rgba(255,255,255,0.06)
+
+  On hover:
+  border-color   : rgba(124,58,237,0.35)
+  box-shadow     : 0 0 0 1px rgba(124,58,237,0.25),
+                   0 30px 80px rgba(0,0,0,0.6),
+                   0 0 60px rgba(124,58,237,0.15)
+  transform      : translateY(-3px)
+  transition     : all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+
+[TYPOGRAPHY]
+
+  Display  : Space Grotesk — weight 700 and 800 — hero titles, card headings
+  Body     : Inter — weight 400, 500, 600 — all body text, labels, inputs
+  Mono     : system monospace — slugs, URLs, filenames, tokens
+  Scale    :
+    Hero H1    : clamp(2.8rem, 7vw, 5rem) / weight 800 / letter-spacing -0.04em
+    Section H2 : 2rem / weight 700 / letter-spacing -0.02em
+    Card H3    : 1.1rem / weight 600
+    Body       : 0.9375rem / weight 400 / line-height 1.7
+    Caption    : 0.8rem / weight 500 / color white-50
+    Mono       : 0.85rem / letter-spacing 0.04em
+
+[ICON SYSTEM]
+
+  Use ONLY inline SVG icons throughout the entire project.
+  No icon font libraries. No external icon CDN.
+  Every icon must be hand-written as an inline SVG element with:
+    width="18" height="18" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+  Icon color inherits from parent element color via currentColor.
+  Size variants: 16px for table rows, 18px for buttons, 24px for section headers,
+                 48px for empty states, 64px for hero icon badge.
+
+---
+
+# PAGES AND FEATURES (FULL DETAIL)
+
+[PAGE 1 — index.php — Public Landing Page]
+
+  Layout     : Full viewport sections, sticky navbar, smooth scroll
+  Background : Layered — solid --bg base, fixed grid overlay at 2% opacity,
+               one large radial-gradient purple orb top-center blurred 120px,
+               and the 25-particle float system all running simultaneously
+
+  Navbar:
+    Left  : Animated logo (spin-border) + "Host IF" wordmark in Space Grotesk
+    Right : "Login" ghost button
+    Style : Sticky top, blur(20px) backdrop, 1px bottom border white-10,
+            height 64px, fades in on scroll with slight background darkening
+
+  Hero Section:
+    Badge     : Pill badge — "Free Static Hosting · Zero Config" — purple border,
+                animated blinking purple dot on left
+    H1 Line 1 : "Host Your Sites." in white — fade-up delay 0.1s
+    H1 Line 2 : "Instantly." in purple gradient text — fade-up delay 0.2s
+    Tagline   : "Upload HTML files and get a live link in seconds.
+                 Full control panel. No server knowledge needed."
+                with typing cursor effect — fade-up delay 0.3s
+    CTA Row   : Primary button "Get Started" with glow-pulse animation,
+                Ghost button "View Demo" beside it — fade-up delay 0.4s
+    Scroll hint: Animated bouncing chevron SVG at bottom center
+
+  Stats Section:
+    3 glassmorphism cards in a row:
+      Card 1 : "Unlimited" label "Sites Hosted"
+      Card 2 : "20MB" label "Max Per File"
+      Card 3 : "100%" label "Browser Controlled"
+    Numbers use count-up animation on IntersectionObserver trigger
+    Numbers render in Space Grotesk 800 with purple gradient text fill
+
+  Features Grid:
+    6 glassmorphism cards in responsive 3-column grid:
+      1. Instant Upload     — drag and drop HTML CSS JS files, live in seconds
+      2. Shareable Links    — every site gets unique /ht/slug/ clean URL
+      3. Full File Manager  — add, replace, delete files from the browser
+      4. Admin Protected    — single password guards the entire control panel
+      5. Storage Overview   — real-time storage usage visible from dashboard
+      6. Settings Control   — change password, file limits, app name live
+    Each card has: large SVG icon (48px, purple), H3 title, body description,
+    shimmer-sweep on hover, fade-up stagger animation on scroll
+
+  How It Works Section:
+    3-step horizontal timeline with numbered markers and connecting line:
+      Step 1 : Login to your admin panel with your password
+      Step 2 : Create a site, upload your HTML and asset files
+      Step 3 : Copy the generated link and share it anywhere
+    Each step: large step number in purple gradient, SVG icon, title, description
+
+  Footer:
+    Left  : Logo + tagline
+    Center: "Built with Host IF"
+    Right : "Login to Panel" text link
+    Border: 1px top border white-10
+
+[PAGE 2 — login.php — Admin Login]
+
+  Layout     : Full viewport centered flex, same particle background as landing
+  Card Style : Glassmorphism card, max-width 420px, centered
+  Logo Block : Animated spin-border logo + "Host IF" + "Sign in to Admin Panel"
+  Form       :
+    Password field with show/hide toggle using inline SVG eye icon
+    Submit button full width with glow-pulse, "Sign In" label
+    On submit: button shows loading spinner SVG + "Signing in..." text
+  Error State: Shake animation on card, red alert bar above form
+  Security   : Session regeneration on login, bcrypt-ready password check structure
+
+[PAGE 3 — dashboard.php — Main Control Panel]
+
+  Layout     : Sticky navbar + scrollable main container, max-width 1100px centered
+
+  Navbar:
+    Left  : Logo + "Host IF" wordmark
+    Center: "Dashboard" active state pill
+    Right : "Settings" SVG icon link + "Logout" ghost button with SVG icon
+
+  Global Stats Bar (4 cards):
+    Total Sites / Total Files / Total Storage Used / Storage Remaining
+    Animated count-up on page load, purple gradient numbers, glassmorphism cards
+
+  Storage Progress Bar:
+    Full-width bar showing used vs total storage
+    Purple gradient fill, smooth CSS width transition, percentage label on right
+    If above 80% fill turns yellow, above 95% turns red
+
+  Controls Row:
+    Left  : Live search input (filters site cards in real-time by name or slug)
+    Right : "Create New Site" primary button with plus SVG icon
+    Search filters via JS without page reload, shows "no results" empty state
+
+  Sites Grid:
+    Responsive grid — 3 columns desktop, 2 tablet, 1 mobile
+    Each site card (glassmorphism):
+      Header row: site name (Space Grotesk bold) + created date
+      Slug row  : monospace /ht/slug/ text in light purple
+      Meta row  : file count chip + storage size chip
+      Actions   :
+        "Manage" ghost button with SVG gear icon — goes to manage.php?id=X
+        "Visit"  primary button with SVG external link icon — opens in new tab
+        Copy link icon button — copies full URL to clipboard, shows check SVG
+    Hover: shimmer-sweep + translateY(-3px) + purple glow border
+    Empty state: large SVG illustration + "No sites yet" + "Create your first site"
+
+  Create Site Modal (triggered by button):
+    Overlay: rgba(0,0,0,0.7) + blur(8px) backdrop
+    Modal box: glassmorphism, max-width 560px, slide-down animation on open
+    Fields:
+      Site Name text input (optional, auto-generates slug from name)
+      Drag and drop upload zone — dashed purple border, cloud SVG icon,
+        "Drag files here or click to select" label,
+        accepted types listed as small pill tags: .html .css .js .jpg .png more
+      File preview list appears below zone after selection —
+        each file shows type SVG icon, filename, filesize, remove X button
+      Max file size warning: "20MB per file" note below zone
+      Upload progress bar: purple gradient, animated width, appears on submit
+    Footer: "Cancel" ghost button + "Upload Now" primary glow button
+
+  Pagination:
+    Shows if sites exceed 12 per page
+    Number buttons, current page highlighted in purple, ghost for others
+
+[PAGE 4 — manage.php — Per-Site Full File Manager]
+
+  Layout : Narrow container max-width 720px, back arrow link to dashboard
+
+  Site Header:
+    Site name in Space Grotesk 800
+    Slug in monospace light purple
+    "View Live Site" button top-right opens in new tab
+
+  Info Chips Row (3 chips):
+    Total files count / Total size / Created date
+    Glassmorphism small chips with purple gradient values
+
+  Site Link Box:
+    Full URL in monospace inside dark box
+    "Copy" button on right — turns to check SVG for 2 seconds on click
+    Purple border, matches brand style
+
+  File Table:
+    Columns: Icon | Filename | Size | Uploaded Date | Actions
+    Each row:
+      Image files show 40x40px thumbnail preview from live /ht/slug/filename URL
+      Other files show type-specific SVG icon (16px)
+      Filename links to file in new tab
+      Actions: Copy URL icon button + Open icon button + Delete icon button
+      Delete triggers confirm dialog before submitting
+    Hover: row background subtle purple tint
+    Responsive: size and date columns hide on mobile
+
+  Add Files Zone:
+    Same drag-drop style as create modal
+    Existing files are overwritten if same filename is uploaded again
+    Warning note: "Files with same name will be replaced"
+    Upload button appears only after files are selected
+
+  Rename Site Card:
+    Text input pre-filled with current site name
+    "Save" ghost button inline
+    Success alert slides in on update
+
+  All File Links Card:
+    Lists every file with its full URL in a monospace link box
+    Copy button per row
+    Collapsed by default, "Show All Links" toggle button expands it
+
+  Danger Zone Card:
+    Red-tinted border and background
+    "Delete Entire Site" button — red danger style
+    Confirm dialog: "This will permanently delete the site and all files."
+    On confirm: deletes DB records, removes upload folder, redirects to dashboard
+
+[PAGE 5 — settings.php — Admin Settings Panel]
+
+  Layout : Narrow container max-width 640px, section cards stacked
+
+  Section 1 — App Identity:
+    App Name field (updates displayed name across all pages from DB)
+    Tagline field
+    Save button — updates settings table in SQLite
+
+  Section 2 — Security:
+    Current Password field (must match before allowing change)
+    New Password field
+    Confirm Password field
+    Save button — hashes and stores new password in settings table
+    Inline validation: red error if current wrong, red if new mismatch
+
+  Section 3 — Upload Limits:
+    Max File Size slider (1MB to 100MB range, default 20MB)
+    Shows current value in real-time beside slider as it moves
+    Allowed File Types: checkbox grid for each extension group
+      HTML/CSS/JS group / Images group / Audio group / Video group /
+      Fonts group / Documents group / Archives group
+    Save button — updates config in DB, config.php reads from DB at runtime
+
+  Section 4 — Storage:
+    Total storage used (read-only, pulls from files table SUM)
+    Large purple progress bar same style as dashboard
+    "Clear All Sites" danger button — requires typing "DELETE" to confirm
+    Per-site breakdown table: site name, file count, size, delete button per row
+
+  Section 5 — System Info:
+    PHP version (read-only chip)
+    SQLite version (read-only chip)
+    Upload directory path (read-only monospace)
+    Database file path (read-only monospace)
+    All displayed as non-editable info rows
+
+---
+
+# DATABASE STRUCTURE
+
+  [TABLE: sites]
+    id          INTEGER PRIMARY KEY AUTOINCREMENT
+    site_name   TEXT NOT NULL DEFAULT ''
+    slug        TEXT NOT NULL UNIQUE
+    created_at  TEXT DEFAULT (datetime('now'))
+
+  [TABLE: files]
+    id          INTEGER PRIMARY KEY AUTOINCREMENT
+    site_id     INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE
+    filename    TEXT NOT NULL
+    file_size   INTEGER DEFAULT 0
+    mime_type   TEXT DEFAULT ''
+    created_at  TEXT DEFAULT (datetime('now'))
+
+  [TABLE: settings]
+    key         TEXT PRIMARY KEY
+    value       TEXT NOT NULL DEFAULT ''
+
+  Default settings rows inserted on first run:
+    app_name        = Host IF
+    tagline         = Your files. Your control. Instantly live.
+    admin_password  = admin123  (plain on first run, replaced with hash on first save)
+    max_file_size   = 20971520  (20MB in bytes)
+    allowed_ext     = html,htm,css,js,jpg,jpeg,png,gif,svg,ico,webp,mp3,mp4,pdf,zip
+
+---
+
+# ROUTING SYSTEM
+
+  .htaccess rules for Apache:
+    /              -> index.php
+    /login         -> login.php
+    /logout        -> logout.php
+    /dashboard     -> dashboard.php
+    /upload        -> upload.php
+    /manage/{id}   -> manage.php?id={id}
+    /settings      -> settings.php
+    /ht/{slug}/{file} -> serve.php?slug={slug}&file={file}
+
+  router.php for PHP built-in server (php -S localhost:8080 router.php):
+    Handles same routes as .htaccess
+    Also serves /assets/ files directly
+    Returns 301 redirect for /ht/{slug}/ to /ht/{slug}/index.html
+
+---
+
+# SERVE SYSTEM — serve.php
+
+  Accepts : GET ?slug=X&file=Y  or clean URL /ht/{slug}/{file}
+  Security:
+    Sanitize slug — allow only alphanumeric, hyphen, underscore
+    Sanitize filename — basename() only, strip ../ and // sequences
+    Reject if file does not exist or is not a file
+  MIME map covers:
+    html htm css js json xml txt pdf
+    jpg jpeg png gif svg ico webp bmp
+    mp3 wav ogg aac flac
+    mp4 webm ogv
+    woff woff2 ttf eot
+    zip
+  Headers:
+    Content-Type from MIME map, fallback application/octet-stream
+    Content-Length from filesize()
+    Cache-Control: public, max-age=3600
+  Fallback: 404 response with clean styled HTML error page matching brand
+
+---
+
+# JAVASCRIPT SYSTEM — app.js
+
+  Module 1 — Particle Engine:
+    On DOMContentLoaded, create 25 div.particle elements and append to body
+    Each gets random: width 3-8px, height same, left position 0-100%,
+    animation-duration 8-20s, animation-delay 0-15s, opacity 0.3-0.7
+    CSS handles the float-up keyframe, JS only creates and randomizes them
+
+  Module 2 — Modal Manager:
+    openModal(id) — adds .open class, locks body scroll, focuses first input
+    closeModal(id) — removes .open class, restores scroll
+    Click outside modal box closes it
+    Escape key closes active modal
+    Applied to: create site modal on dashboard
+
+  Module 3 — Drag and Drop:
+    For every .upload-zone element:
+      dragenter and dragover — add .drag-over class (purple glow border)
+      dragleave and drop — remove .drag-over class
+      drop — assign event.dataTransfer.files to the hidden file input
+    fileInput change event — calls renderFileList(files)
+    renderFileList — builds preview rows: SVG icon + filename + size + X remove button
+    X button — splices file from FileList-like array, re-renders list
+
+  Module 4 — Live Search:
+    Input event on #search field
+    Queries all .site-card elements
+    Filters by data-name and data-slug attributes (both lowercase)
+    Hides non-matching cards with display:none
+    Shows .empty-search element if zero cards visible
+
+  Module 5 — Clipboard:
+    copyToClipboard(text, buttonEl) function
+    Uses navigator.clipboard.writeText()
+    On success: swaps button inner SVG to checkmark SVG for 2000ms, then reverts
+    On failure: falls back to document.execCommand copy
+
+  Module 6 — Count Up:
+    countUp(el, target, duration) function using requestAnimationFrame
+    easeOutCubic easing curve
+    IntersectionObserver watches all .count-up elements
+    Triggers once on first intersection, reads data-target attribute for value
+
+  Module 7 — Upload Progress:
+    On upload form submit:
+    Disables submit button, swaps text to "Uploading..." with spinner SVG
+    Shows .progress-bar-wrap, animates bar width with setInterval to 85%
+    Clears interval on page navigation
+
+  Module 8 — Alerts:
+    Auto-dismiss .alert elements after 4000ms with fade-out transition
+    Slide-in animation on appear
+
+---
+
+# RULES (VERY STRICT)
+
+  All inline SVG icons — no icon library, no font icons, no img tags for icons
+  All animations defined in style.css keyframes — no JS animation libraries
+  Session check at top of every protected page — redirect to login if not auth
+  All user input sanitized with htmlspecialchars on output, PDO prepared statements
+  No hardcoded admin password in config.php if settings table has one — always
+  read from DB first, fall back to constant only if table is empty
+  Slug generation: lowercase, replace non-alphanumeric with hyphen, trim hyphens,
+  append -2 -3 etc if slug already exists in DB
+  File overwrite behavior: if same filename uploaded to same site, delete old DB
+  record and disk file before saving new one
+  All file sizes displayed human-readable: B, KB, MB, GB with 2 decimal places
+  Mobile responsive: all pages functional at 320px minimum width
+  No comments in output code unless the line is a section separator
+  Do NOT add any feature, page, field, or file not listed in this prompt
+
+---
+
+# OUTPUT REQUIREMENTS
+
+Generate the following files with full production-ready code:
+
+  hostif/index.php      Full animated public landing page
+  hostif/login.php      Glassmorphism login with shake and loading states
+  hostif/dashboard.php  Full control panel with modal, search, stats, grid
+  hostif/upload.php     POST processor, validates, saves, redirects
+  hostif/manage.php     Complete per-site manager with all CRUD controls
+  hostif/settings.php   Full settings panel with all 5 sections
+  hostif/logout.php     Session destroy and redirect
+  hostif/serve.php      MIME-aware secure file server
+  hostif/router.php     PHP built-in server router
+  hostif/config.php     Constants with DB settings override
+  hostif/db.php         PDO init, schema, default settings seed
+  hostif/functions.php  All helper functions, no extra logic outside this file
+  hostif/.htaccess      Full mod_rewrite rules
+  hostif/assets/style.css   Complete design system, all animations, responsive
+  hostif/assets/app.js      All 8 JS modules, no external dependencies
+
+Do NOT output anything outside these files.
+Do NOT insert explanations between files.
+Do NOT add placeholder comments like "add your logic here".
+Every file must be 100 percent functional and production-ready as written.
